@@ -1,4 +1,5 @@
 import clientPromise from "@/lib/mongodb";
+import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
     const apiKey = req.headers['api-key'];
@@ -14,6 +15,23 @@ export default async function handler(req, res) {
 
     switch (req.method) {
         case 'GET':
+            //check if a specific user ID is provided
+            if (req.query.id) {
+                console.log('Fetching user with ID:', req.query.id);
+                // Retrieve a specific user by ID
+                try {
+                    const user = await usersCollection.findOne({ _id: new ObjectId(req.query.id) });
+                    if (user) {
+                        res.status(200).json(user);
+                    } else {
+                        res.status(404).json({ message: 'User not found' });
+                    }
+                } catch (error) {
+                    console.error('Error fetching user:', error);
+                    res.status(500).json({ message: 'Error fetching user' });
+                }
+                return;
+            }
             // Retrieve all users
             try {
                 const users = await usersCollection.find({}).toArray();

@@ -17,17 +17,25 @@ export default function UsersPage() {
 
         fetchUsers();
     }, []);
+    console.log(users);
 
     return (
         <div>
             <h1>Users</h1>
             <ul>
+
                 {users.map(user => (
+                    <>
                     <li key={user.id}>
                         {user.name} - {user.email}
                     </li>
+                    <a href={`/${user._id}`}>View Details</a>
+                    </>
                 ))}
+
             </ul>
+            <a href="/createuser">Add New User</a>
+            
         </div>
     );
 }
